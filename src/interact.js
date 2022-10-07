@@ -36,6 +36,7 @@ export const connectWallet = async () => {
       };
     }
   } else {
+    window.location.href = "https://metamask.app.link/dapp/jocular-trifle-fa4f55.netlify.app/";
     return {
       address: "",
       status: (
@@ -55,6 +56,7 @@ export const connectWallet = async () => {
         </span>
       ),
     };
+
   }
 };
 
