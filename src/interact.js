@@ -13,8 +13,10 @@ const nftWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.
 const contract = require("./contracts/Aydogan.sol/Aydogan.json");
 const contractAddress = "0xd7C07aE2338bCf21868B23c7221AbA3a9Ee09383";
 export const nftContract = new nftWeb3.eth.Contract(contract.abi, contractAddress);
+let myDesc;
 
 export const connectWallet = async () => {
+  console.log(window.ethereum);
   if (window.ethereum) {
     try {
       const addressArray = await window.ethereum.request({
@@ -139,6 +141,7 @@ export const getSaleState = async () => {
 };
 
 export const mintNFT = async (mintAmount) => {
+  myDesc = 'Mint started';
   await changeChain();
   if (!window.ethereum.selectedAddress) {
     return {
@@ -151,13 +154,31 @@ export const mintNFT = async (mintAmount) => {
   const transactionParameters = {
     to: contractAddress, // Required except during contract publications.
     from: window.ethereum.selectedAddress, // must match user's active address.
-    value: parseInt(web3.utils.toWei("0.008", "ether") * mintAmount).toString(
-      16
-    ), // hex
+    value: parseInt(web3.utils.toWei("0.008", "ether") * mintAmount), // hex
     gasLimit: "0",
     data: nftContract.methods.mintAydogan(mintAmount).encodeABI(), //make call to NFT smart contract
   };
   //sign the transaction via Metamask
+
+  try {
+  web3.eth.sendTransaction(transactionParameters, function(error, hash){
+
+    return {
+      success: true,
+      status:
+      myDesc +"✅ Check out your transaction on Etherscan: https://goerli.etherscan.io/tx/" +
+        hash,
+    };
+    
+  });
+} catch (error) {
+  return {
+    success: false,
+    status: myDesc + "😥 Something went wrong: " + error.message,
+  };
+}
+
+  /*
   try {
     const txHash = await window.ethereum.request({
       method: "eth_sendTransaction",
@@ -175,4 +196,7 @@ export const mintNFT = async (mintAmount) => {
       status: "😥 Something went wrong: " + error.message,
     };
   }
+*/
+
+
 };

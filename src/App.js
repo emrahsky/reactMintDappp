@@ -24,6 +24,7 @@ const [maxMintAmount, setMaxMintAmount] = useState(0);
 const [totalSupply, setTotalSupply] = useState(0);
 const [nftPrice, setNftPrice] = useState("0.01");
 const [isSaleActive, setIsSaleActive] = useState(true);
+const [myDescription, setMyDescription] = useState(true);
 
 const connectWalletPressed = async () => {
   const walletResponse = await connectWallet();
@@ -77,6 +78,10 @@ useEffect(() => {
 }, []);
 
 const addWalletListener = () => {
+  if (typeof window.ethereum !== 'undefined') {
+    setMyDescription('MetaMask is installed!');
+  }
+
   if (window.ethereum) {
     window.ethereum.on("accountsChanged", async (accounts) => {
       if (accounts.length > 0) {
@@ -88,6 +93,7 @@ const addWalletListener = () => {
         setWalletAddress(accounts[0]);
         setWalletBalance(formatedBalance);
         setStatus("");
+        setMyDescription('Accounts changed');
       } else {
         setWalletAddress("");
         setStatus("🦊 Connect to Metamask using Connect Wallet button.");
@@ -103,6 +109,7 @@ const addWalletListener = () => {
       setWalletChainName(chainName);
       setWalletAddress(accounts[0]);
       setWalletBalance(formatedBalance);
+      setMyDescription('Chain changed');
       window.location.reload();
     });
   }
@@ -114,7 +121,7 @@ const addWalletListener = () => {
       <h3>
         <span>MINT</span> NFT
         </h3>
-        <img src={nftsGif} className="App-gif" alt=""/>
+         {/* <img src={nftsGif} className="App-gif" alt=""/>  */}
 
         {isSaleActive ? (
           <>
@@ -158,9 +165,9 @@ const addWalletListener = () => {
         )}
         <div className="App-status">    
       {status && (     
-            <p>
+            <small>
               {status}
-            </p>
+            </small>
           )}
           </div> 
       </main>
