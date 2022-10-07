@@ -1,4 +1,4 @@
-import nftsGif from './preview.gif';
+//import nftsGif from './preview.gif';
 import './App.css';
 import { useState, useEffect } from "react";
 import { 
@@ -121,6 +121,7 @@ const addWalletListener = () => {
       <h3>
         <span>MINT</span> NFT
         </h3>
+        <span>{myDescription}</span>
          {/* <img src={nftsGif} className="App-gif" alt=""/>  */}
 
         {isSaleActive ? (
