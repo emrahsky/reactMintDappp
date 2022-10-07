@@ -82,6 +82,11 @@ const addWalletListener = () => {
     setMyDescription('MetaMask is installed!');
   }
 
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+      alert('Its Mobile device');
+  }
+
   if (window.ethereum) {
     window.ethereum.on("accountsChanged", async (accounts) => {
       if (accounts.length > 0) {
