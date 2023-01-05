@@ -22,7 +22,7 @@ const [walletChainName, setWalletChainName] = useState(0);
 const [count, setCount] = useState(1);
 const [maxMintAmount, setMaxMintAmount] = useState(0);
 const [totalSupply, setTotalSupply] = useState(0);
-const [nftPrice, setNftPrice] = useState("0.01");
+const [nftPrice, setNftPrice] = useState("10");
 const [isSaleActive, setIsSaleActive] = useState(true);
 const [myDescription, setMyDescription] = useState(true);
 
@@ -33,7 +33,9 @@ const connectWalletPressed = async () => {
 };
 
 const updateTotalSupply = async () => {
-  const mintedCount = await getTotalSupply();
+  let mintedCount = 0;
+  mintedCount = await getTotalSupply();
+  mintedCount = mintedCount - 5660;
   setTotalSupply(mintedCount);
 };
 
@@ -143,7 +145,7 @@ const addWalletListener = () => {
 
           <p className="App-nftDetail">
               <span className="App-mintAmount">{`${totalSupply}`}</span> /
-              10K
+              1K
           </p>
 
           <div className="quantity">
@@ -153,7 +155,7 @@ const addWalletListener = () => {
           </div>
 
           <p className="App-mintGas">
-                {nftPrice} ETH{" "}
+                {nftPrice} MATIC{" "}
                 <span className="text-sm text-gray-300"> + GAS</span>
           </p>
 

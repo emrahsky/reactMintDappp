@@ -116,7 +116,7 @@ export const changeChain = async () => {
 // Contract Methods
 
 export const getMaxMintAmount = async () => {
-  const result = await nftContract.methods.maxSupply().call();
+  const result = await nftContract.methods.maxMintAmountPerTx().call();
   return result;
 };
 
@@ -127,8 +127,8 @@ export const getTotalSupply = async () => {
 
 export const getNftPrice = async () => {
   const result = await nftContract.methods.cost().call();
-  const resultEther = web3.utils.fromWei(result, "ether");
-  return resultEther;
+  //const resultEther = web3.utils.fromWei(result, "ether");
+  return result;
 };
 
 export const getSaleState = async () => {
