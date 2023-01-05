@@ -1,18 +1,12 @@
 import Web3 from "web3";
 import { chainMap } from "./chains";
 
-/*
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
-const web3 = createAlchemyWeb3(process.env.NEXT_PUBLIC_API_URL);
-const contract = require("../artifacts/contracts/Aydogan.sol/Aydogan.json");
-const contractAddress = "0xd7C07aE2338bCf21868B23c7221AbA3a9Ee09383";
-const nftContract = new web3.eth.Contract(contract.abi, contractAddress);*/
 
-export const web3 = new Web3(Web3.givenProvider); 
-const nftWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'));
-const contract = require("./contracts/Aydogan.sol/Aydogan.json");
-const contractAddress = "0xd7C07aE2338bCf21868B23c7221AbA3a9Ee09383";
-export const nftContract = new nftWeb3.eth.Contract(contract.abi, contractAddress);
+export const web3 = new Web3(window.ethereum); 
+//const nftWeb3 = new Web3(new Web3.providers.HttpProvider('https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'));
+const contractAbi = require("./contracts/abi.json");
+const contractAddress = "0x2918Be08C2b0DDE764301c4231DA4f4FcceB0dCA";
+export const nftContract = new web3.eth.Contract(contractAbi, contractAddress);
 let myDesc;
 
 export const connectWallet = async () => {
@@ -115,14 +109,14 @@ export const getCurrentWalletConnected = async () => {
 export const changeChain = async () => {
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: web3.utils.toHex(5) }]
+      params: [{ chainId: web3.utils.toHex(137) }]
     });
 };
 
 // Contract Methods
 
 export const getMaxMintAmount = async () => {
-  const result = await nftContract.methods.maxTokenPurchase().call();
+  const result = await nftContract.methods.maxSupply().call();
   return result;
 };
 
@@ -132,13 +126,13 @@ export const getTotalSupply = async () => {
 };
 
 export const getNftPrice = async () => {
-  const result = await nftContract.methods.tokenPrice().call();
+  const result = await nftContract.methods.cost().call();
   const resultEther = web3.utils.fromWei(result, "ether");
   return resultEther;
 };
 
 export const getSaleState = async () => {
-  const result = await nftContract.methods.presaleIsActive().call();
+  const result = await nftContract.methods.paused().call();
   return result;
 };
 
@@ -156,9 +150,9 @@ export const mintNFT = async (mintAmount) => {
   const transactionParameters = {
     to: contractAddress, // Required except during contract publications.
     from: window.ethereum.selectedAddress, // must match user's active address.
-    value: parseInt(web3.utils.toWei("0.008", "ether") * mintAmount), // hex
+    value: parseInt(web3.utils.toWei("10", "ether") * mintAmount), // hex
     gasLimit: "0",
-    data: nftContract.methods.mintAydogan(mintAmount).encodeABI(), //make call to NFT smart contract
+    data: nftContract.methods.freeMint(mintAmount).encodeABI(), //make call to NFT smart contract
   };
   //sign the transaction via Metamask
 
@@ -168,7 +162,7 @@ export const mintNFT = async (mintAmount) => {
     return {
       success: true,
       status:
-      myDesc +"✅ Check out your transaction on Etherscan: https://goerli.etherscan.io/tx/" +
+      myDesc +"✅ Check out your transaction on Polygonscan: https://polygonscan.com/tx/" +
         hash,
     };
     
